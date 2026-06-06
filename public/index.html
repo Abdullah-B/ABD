@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🔥 BBQ Trip Planner</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>🔥 BBQ Trip Planner</h1>
+    <div class="status" id="storage-status" title="Where your data is being saved">
+      <span class="dot" id="status-dot"></span>
+      <span id="status-text">Loading…</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="participants" role="tab">👥 People</button>
+    <button class="tab" data-tab="groups" role="tab">🧩 Groups</button>
+    <button class="tab" data-tab="program" role="tab">🗓️ Program</button>
+    <button class="tab" data-tab="map" role="tab">🗺️ Area Map</button>
+    <button class="tab" data-tab="shopping" role="tab">🛒 Shopping</button>
+  </nav>
+
+  <main>
+    <!-- PARTICIPANTS -->
+    <section class="panel active" id="tab-participants">
+      <h2>Participants</h2>
+      <p class="hint">Add everyone who is joining the barbecue trip.</p>
+      <form id="participant-form" class="inline-form">
+        <input type="text" id="participant-name" placeholder="Name" autocomplete="off" required />
+        <button type="submit">Add person</button>
+      </form>
+      <div class="bulk">
+        <details>
+          <summary>Paste many names at once</summary>
+          <textarea id="bulk-names" rows="4" placeholder="One name per line"></textarea>
+          <button id="bulk-add" type="button">Add all</button>
+        </details>
+      </div>
+      <p class="counter"><strong id="participant-count">0</strong> people joining</p>
+      <ul class="list" id="participant-list"></ul>
+    </section>
+
+    <!-- GROUPS -->
+    <section class="panel" id="tab-groups">
+      <h2>Groups</h2>
+      <p class="hint">Split everyone into groups. Reassign anyone with the dropdown.</p>
+      <div class="controls">
+        <label>Group size
+          <input type="number" id="group-size" min="1" max="50" value="5" />
+        </label>
+        <button id="split-btn">Split into groups</button>
+        <button id="shuffle-btn" class="secondary">🎲 Shuffle &amp; split</button>
+        <button id="clear-groups-btn" class="secondary danger">Clear</button>
+      </div>
+      <div class="groups-grid" id="groups-grid"></div>
+    </section>
+
+    <!-- PROGRAM -->
+    <section class="panel" id="tab-program">
+      <h2>Program / Schedule</h2>
+      <p class="hint">Plan the day: what, when it starts, and how long it takes.</p>
+      <form id="program-form" class="inline-form wrap">
+        <input type="text" id="prog-activity" placeholder="Activity" required />
+        <label>Start <input type="time" id="prog-start" required /></label>
+        <label>Duration (min) <input type="number" id="prog-duration" min="0" step="5" value="30" required /></label>
+        <button type="submit">Add to program</button>
+      </form>
+      <table class="data-table" id="program-table">
+        <thead>
+          <tr><th>Start</th><th>Activity</th><th>Duration</th><th>Ends</th><th></th></tr>
+        </thead>
+        <tbody id="program-body"></tbody>
+      </table>
+    </section>
+
+    <!-- MAP -->
+    <section class="panel" id="tab-map">
+      <h2>Area Map</h2>
+      <p class="hint">Upload a photo of the barbecue area, then draw and label where each group goes.</p>
+      <div class="controls map-controls">
+        <label class="file-label">📷 Upload area photo
+          <input type="file" id="map-image" accept="image/*" hidden />
+        </label>
+        <span class="sep"></span>
+        <label>Tool
+          <select id="draw-tool">
+            <option value="rect">Rectangle</option>
+            <option value="pen">Freehand</option>
+          </select>
+        </label>
+        <label>Color <input type="color" id="draw-color" value="#e63946" /></label>
+        <label>Label <input type="text" id="draw-label" placeholder="e.g. Group 1 / Grill" /></label>
+        <button id="undo-draw" class="secondary">↶ Undo</button>
+        <button id="clear-draw" class="secondary danger">Clear drawings</button>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="map-canvas" width="900" height="560"></canvas>
+        <p class="empty-canvas" id="canvas-placeholder">No image yet — upload a photo of the spot to start drawing areas.</p>
+      </div>
+      <ul class="legend" id="map-legend"></ul>
+    </section>
+
+    <!-- SHOPPING -->
+    <section class="panel" id="tab-shopping">
+      <h2>Shopping List</h2>
+      <p class="hint">Anyone in charge of buying adds items here. The leader tracks cost and what's left.</p>
+      <form id="shopping-form" class="inline-form wrap">
+        <input type="text" id="shop-item" placeholder="Item (e.g. Charcoal)" required />
+        <input type="number" id="shop-qty" placeholder="Qty" min="1" value="1" />
+        <input type="text" id="shop-who" placeholder="In charge (name)" />
+        <input type="number" id="shop-cost" placeholder="Est. cost" min="0" step="0.01" />
+        <button type="submit">Add item</button>
+      </form>
+
+      <div class="summary" id="shopping-summary">
+        <div class="summary-card"><span class="big" id="sum-items">0</span><span>Items</span></div>
+        <div class="summary-card"><span class="big" id="sum-bought">0</span><span>Purchased</span></div>
+        <div class="summary-card"><span class="big" id="sum-left">0</span><span>Left to buy</span></div>
+        <div class="summary-card"><span class="big" id="sum-spent">0</span><span>Spent</span></div>
+        <div class="summary-card"><span class="big" id="sum-est">0</span><span>Estimated total</span></div>
+      </div>
+
+      <table class="data-table" id="shopping-table">
+        <thead>
+          <tr><th>✓</th><th>Item</th><th>Qty</th><th>In charge</th><th>Cost</th><th></th></tr>
+        </thead>
+        <tbody id="shopping-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Firebase SDK (compat) — used only if firebase-config.js is filled in. -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/participants.js"></script>
+  <script src="js/groups.js"></script>
+  <script src="js/program.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/shopping.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
