@@ -14,15 +14,15 @@
  * Leave the placeholders as-is to keep using local-only storage.
  */
 window.FIREBASE_CONFIG = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCydrNF67k0heovgQuXv0O79iFhxxTPkB8",
+  authDomain: "bbq-halaqa.firebaseapp.com",
+  databaseURL: "https://bbq-halaqa-default-rtdb.firebaseio.com",
+  projectId: "bbq-halaqa",
+  storageBucket: "bbq-halaqa.firebasestorage.app",
+  messagingSenderId: "950023637327",
+  appId: "1:950023637327:web:3eec8492e6d5ea87879d3a"
 };
 
 // A shared "room" key so multiple people see the same plan. Change it to
 // start a fresh, separate plan (e.g. "summer-bbq-2026").
-window.BBQ_ROOM = "default-trip";
+window.BBQ_ROOM = "bbq-halaqa-trip2";

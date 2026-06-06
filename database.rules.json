@@ -1,7 +1,6 @@
 {
   "rules": {
     ".read": true,
-    ".write": true,
-    "_note": "Open rules are fine for a private, short-lived planning session. Before sharing the URL widely, add Firebase Auth and lock these down."
+    ".write": true
   }
 }
