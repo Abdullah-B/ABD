@@ -42,6 +42,8 @@ cd public && python3 -m http.server 8000
 
 ## Deploy to Firebase (free tier)
 
+See **[DEPLOY.md](DEPLOY.md)** for the full step-by-step guide. In short:
+
 1. Create a project at <https://console.firebase.google.com>.
 2. Enable **Build → Realtime Database** (start in test mode while planning).
 3. Copy your web app config into `public/firebase-config.js`, and set the
