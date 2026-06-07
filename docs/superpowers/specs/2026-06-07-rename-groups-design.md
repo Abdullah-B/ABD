@@ -42,8 +42,13 @@ split/shuffle/reassign/render plus a data migration — overkill for "rename"
 
 - Add `"groupNames"` to `COLLECTIONS` and to `DEFAULTS` (`groupNames: {}`) in
   `store.js`.
-- Shape: `{ "1": "Grill Crew", "2": "Salad Squad" }` — string number key →
-  custom label. A missing key means the default `"Group n"`.
+- Shape: `{ "g1": "Grill Crew", "g2": "Salad Squad" }` — key is `"g" +
+  groupNumber`, value is the custom label. A missing key means the default
+  `"Group n"`.
+- **Firebase compatibility:** keys are prefixed with `g` so the Realtime
+  Database never coerces the map into a JS array (which it does when keys are
+  sequential integers like `1, 2, 3`). `displayName(n)` reads
+  `groupNames["g" + n]`.
 - Persists automatically via the existing backends: `${room}/groupNames` in the
   Realtime Database, `bbq:${room}:groupNames` in localStorage.
 
@@ -84,13 +89,13 @@ Delete `.group` from every participant **and** set `groupNames = {}`.
 - **Commit:** Enter or ✓. **Cancel:** Esc, ✕, or blur (clicking away). Only one
   editor open at a time (a re-render closes any open editor).
 - On commit: `name = input.value.trim()`. If `name === ""` **or** `name ===
-  "Group " + n` → delete `groupNames[n]` (revert to default). Otherwise set
-  `groupNames[n] = name`. Persist via `Store.update("groupNames", ...)`.
+  "Group " + n` → delete `groupNames["g" + n]` (revert to default). Otherwise
+  set `groupNames["g" + n] = name`. Persist via `Store.update("groupNames", ...)`.
 - Validation: `maxlength="40"` on the input plus a trim; no other constraints.
 
 ## Rendering — names everywhere
 
-- Helper `displayName(n) = groupNames[n] || ("Group " + n)`.
+- Helper `displayName(n) = groupNames["g" + n] || ("Group " + n)`.
 - Card title: `` `${displayName(n)} (${count})` `` set via `textContent`.
 - Move-to-group `<select>` options use `displayName(g)` for `g` in
   `1..maxGroup+1`. The existing "+1 new group" option shows its default name
