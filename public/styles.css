@@ -170,3 +170,6 @@ button:disabled, .controls input:disabled { opacity: .5; cursor: not-allowed; }
 .list li.paid, .group-card li.paid { background: #e6f7e9; border-color: #b7e4c7; }
 .paid-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .paid-toggle input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+
+/* Participant row action buttons (rename + remove) grouped on the right */
+.row-actions { display: flex; align-items: center; gap: 4px; }

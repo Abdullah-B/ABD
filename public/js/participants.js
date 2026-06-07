@@ -1,4 +1,4 @@
-/* Participants tab: add/remove the people joining the trip; mark who has paid. */
+/* Participants tab: add/remove/rename people; mark who has paid; print roster. */
 window.Participants = (function () {
   let current = [];
 
@@ -46,6 +46,14 @@ window.Participants = (function () {
     });
   }
 
+  function updateName(id, name) {
+    Store.update("participants", (list) => {
+      const p = list.find((x) => x.id === id);
+      if (p) p.name = name;
+      return list;
+    });
+  }
+
   function render(list) {
     current = list || [];
     document.getElementById("participant-count").textContent = current.length;
@@ -62,7 +70,7 @@ window.Participants = (function () {
       const li = document.createElement("li");
       if (p.paid) li.classList.add("paid");
 
-      // Checkbox + name grouped on the left; remove button stays on the right.
+      // Checkbox + name grouped on the left; action buttons on the right.
       const label = document.createElement("label");
       label.className = "paid-toggle";
       label.title = p.paid ? "Mark unpaid" : "Mark paid";
@@ -76,15 +84,67 @@ window.Participants = (function () {
       span.textContent = p.name;
       label.append(box, span);
 
+      const actions = document.createElement("span");
+      actions.className = "row-actions";
+
+      // Pencil sits OUTSIDE the label so clicking it doesn't toggle paid.
+      const edit = document.createElement("button");
+      edit.className = "icon-btn";
+      edit.title = "Rename";
+      edit.textContent = "✎";
+      edit.addEventListener("click", () => openEditor(li, p));
+
       const btn = document.createElement("button");
       btn.className = "remove";
       btn.title = "Remove";
       btn.textContent = "✕";
       btn.addEventListener("click", () => remove(p.id));
 
-      li.append(label, btn);
+      actions.append(edit, btn);
+      li.append(label, actions);
       ul.appendChild(li);
     });
+  }
+
+  // Replace a participant row with an inline name editor.
+  function openEditor(li, p) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.maxLength = 40;
+    input.value = p.name;
+    input.className = "rename-input";
+
+    const save = document.createElement("button");
+    save.className = "icon-btn"; save.title = "Save"; save.textContent = "✓";
+
+    const cancel = document.createElement("button");
+    cancel.className = "icon-btn"; cancel.title = "Cancel"; cancel.textContent = "✕";
+
+    let done = false;
+    function commit() {
+      if (done) return; done = true;
+      const name = input.value.trim();
+      if (name && name !== p.name) updateName(p.id, name); // subscription re-renders
+      else render(current);                                 // blank/unchanged: restore row
+    }
+    // render(current), NOT render(): render(list) sets current = list || [], so a
+    // bare render() would blank the whole list.
+    function abort() { if (done) return; done = true; render(current); }
+
+    // mousedown + preventDefault keeps focus on the input so the click registers
+    // (a plain click would blur the input first and trigger cancel).
+    save.addEventListener("mousedown", (e) => { e.preventDefault(); commit(); });
+    cancel.addEventListener("mousedown", (e) => { e.preventDefault(); abort(); });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); commit(); }
+      else if (e.key === "Escape") { e.preventDefault(); abort(); }
+    });
+    input.addEventListener("blur", abort);
+
+    li.innerHTML = "";
+    li.append(input, save, cancel);
+    input.focus();
+    input.select();
   }
 
   function getAll() { return current; }
