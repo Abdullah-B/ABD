@@ -65,7 +65,7 @@ window.Participants = (function () {
       // Checkbox + name grouped on the left; remove button stays on the right.
       const label = document.createElement("label");
       label.className = "paid-toggle";
-      label.title = "Mark paid";
+      label.title = p.paid ? "Mark unpaid" : "Mark paid";
 
       const box = document.createElement("input");
       box.type = "checkbox";
