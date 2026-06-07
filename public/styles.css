@@ -157,3 +157,11 @@ button.secondary.danger:hover { background: #f8d7da; }
   .inline-form { flex-wrap: wrap; }
   .app-header h1 { font-size: 1.1rem; }
 }
+
+/* Group card header: title + rename controls on one row */
+.group-card-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.group-card-header h3 { margin: 0; }
+.rename-input { flex: 1; min-width: 0; font-size: 1rem; padding: 4px 6px; }
+
+/* Disabled buttons / inputs read as "grayed out" */
+button:disabled, .controls input:disabled { opacity: .5; cursor: not-allowed; }
