@@ -165,3 +165,8 @@ button.secondary.danger:hover { background: #f8d7da; }
 
 /* Disabled buttons / inputs read as "grayed out" */
 button:disabled, .controls input:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Paid participants: light-green card in both the People list and group cards */
+.list li.paid, .group-card li.paid { background: #e6f7e9; border-color: #b7e4c7; }
+.paid-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.paid-toggle input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
