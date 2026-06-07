@@ -20,6 +20,8 @@ window.Participants = (function () {
       bulkText.value = "";
     });
 
+    document.getElementById("print-participants").addEventListener("click", () => window.print());
+
     Store.subscribe("participants", render);
   }
 

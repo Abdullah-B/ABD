@@ -173,3 +173,18 @@ button:disabled, .controls input:disabled { opacity: .5; cursor: not-allowed; }
 
 /* Participant row action buttons (rename + remove) grouped on the right */
 .row-actions { display: flex; align-items: center; gap: 4px; }
+
+/* Print: a clean participant roster (name + paid status), no app chrome */
+@media print {
+  .app-header, .tabs, .hint, #participant-form, .bulk, #print-participants,
+  .panel:not(.active) { display: none !important; }
+  main { max-width: none; margin: 0; padding: 0; }
+  .list li {
+    box-shadow: none; border: none; border-bottom: 1px solid #ccc;
+    border-radius: 0; background: none !important; padding: 6px 0;
+    page-break-inside: avoid;
+  }
+  .list li .paid-toggle input[type="checkbox"], .list li .row-actions { display: none !important; }
+  .list li.paid .paid-toggle span::after { content: " — Paid"; font-weight: 600; }
+  .list li:not(.paid) .paid-toggle span::after { content: " — Not paid"; color: #555; }
+}
