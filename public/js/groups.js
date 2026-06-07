@@ -146,6 +146,7 @@ window.Groups = (function () {
     const ul = document.createElement("ul");
     members.forEach((p) => {
       const li = document.createElement("li");
+      if (p.paid) li.classList.add("paid");
       const name = document.createElement("span");
       name.textContent = p.name;
 
