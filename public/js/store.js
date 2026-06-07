@@ -8,12 +8,13 @@
  *   Store.update(name, fn)     -> read-modify-write helper
  */
 window.Store = (function () {
-  const COLLECTIONS = ["participants", "program", "shopping", "map"];
+  const COLLECTIONS = ["participants", "program", "shopping", "map", "groupNames"];
   const DEFAULTS = {
     participants: [],
     program: [],
     shopping: [],
-    map: { image: null, shapes: [] }
+    map: { image: null, shapes: [] },
+    groupNames: {}
   };
 
   const subscribers = {}; // name -> [cb]
